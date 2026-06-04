@@ -47,10 +47,30 @@ initDatabase()
       saveUninitialized: false,
       store: sessionStore,
       cookie: {
-        secure: false, // Set ke true jika pakai HTTPS di production
+        secure: true,       // wajib true agar SameSite=None bisa bekerja
+        sameSite: 'none',   // wajib untuk cross-origin cookie (Railway ↔ Hostinger)
         maxAge: 24 * 60 * 60 * 1000, // 24 jam
       },
     }));
+
+    // ─── AUTO-LOGIN (bypass login, semua user otomatis masuk sebagai admin) ──────
+    // Ubah BYPASS_LOGIN=false di .env untuk mengaktifkan login kembali
+    const BYPASS_LOGIN = process.env.BYPASS_LOGIN !== 'false';
+    if (BYPASS_LOGIN) {
+      app.use(async (req, res, next) => {
+        if (!req.session.userId) {
+          try {
+            const [rows] = await pool.query('SELECT * FROM users WHERE username = ?', ['admin']);
+            if (rows.length > 0) {
+              req.session.userId   = rows[0].id;
+              req.session.username = rows[0].username;
+              req.session.isAdmin  = true;
+            }
+          } catch (e) { /* abaikan error */ }
+        }
+        next();
+      });
+    }
 
     // Import semua routes
     const authRoutes = require('./src/routes/authRoutes')(pool);

@@ -1,0 +1,12 @@
+DirectoryIndex login.html index.html
+
+RewriteEngine On
+RewriteBase /
+
+# Jika file atau folder NYATA ada, serve langsung
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Arahkan root ke login.html tanpa tampilkan nama file di URL
+RewriteRule ^$ login.html [L,QSA]
