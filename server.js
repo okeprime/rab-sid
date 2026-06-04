@@ -24,15 +24,18 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ─── Halaman Statis ────────────────────────────────────────────────────────────
-app.use(express.static(path.join(__dirname, 'public')));
+// ─── Halaman Statis (URL BERSIH TANPA .HTML) ───────────────────────────────────
+// Opsi extensions: ['html'] ditambahkan agar Express otomatis membaca file HTML
+app.use(express.static(path.join(__dirname, 'public'), {
+    extensions: ['html']
+}));
 
-// Redirect root ke login
+// Redirect root ke login (Arahkan ke URL bersih tanpa .html)
 app.get('/', (req, res) => {
   if (req.session && req.session.userId) {
-    return res.redirect('/index.html');
+    return res.redirect('/index'); 
   }
-  res.redirect('/login.html');
+  res.redirect('/login');
 });
 
 // ─── Inisialisasi Database & Mount Routes ──────────────────────────────────────
