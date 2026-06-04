@@ -130,7 +130,7 @@ function calculateTotals() {
 
     if (bar) {
       bar.style.width = pct + '%';
-      const pctEl = bar.querySelector('.percentage');
+      const pctEl = bar.parentElement.querySelector('.percentage');
       if (pctEl) pctEl.textContent = pct + '%';
     }
     if (valEl) valEl.textContent = formatRupiah(val);
@@ -140,7 +140,7 @@ function calculateTotals() {
   const totalBar = document.getElementById('total-bar');
   if (totalBar) {
     totalBar.style.width = '100%';
-    const pctEl = totalBar.querySelector('.percentage');
+    const pctEl = totalBar.parentElement.querySelector('.percentage');
     if (pctEl) pctEl.textContent = '100%';
   }
   const totalValueEl = document.getElementById('total-value');
