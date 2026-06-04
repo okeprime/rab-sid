@@ -4,7 +4,9 @@
 let sortOrderAHS = { kelompok:'asc', kode_ahs:'asc', ahs:'asc', satuan:'asc', created_at:'asc' };
 
 async function api(url, options = {}) {
-  const res = await fetch(url, { headers: {'Content-Type':'application/json'}, ...options });
+  url = (window.API_BASE || '') + url;
+  const res = await fetch(url, {
+    credentials: 'include', headers: {'Content-Type':'application/json'}, ...options });
   if (res.status === 401) { window.location.href = '/login.html'; return null; }
   return res.json();
 }
@@ -130,7 +132,7 @@ async function deleteAllAhs() {
   loadAHS();
 }
 
-function exportData() { window.open('/api/export/ahs', '_blank'); }
+function exportData() { window.open(`${window.API_BASE}/api/export/ahs`, '_blank'); }
 
 function importData() {
   const input = document.createElement('input');
@@ -138,7 +140,7 @@ function importData() {
   input.onchange = async (e) => {
     const file = e.target.files[0]; if (!file) return;
     const formData = new FormData(); formData.append('file', file);
-    const res = await fetch('/api/export/import-ahs', { method:'POST', body: formData });
+    const res = await fetch(`${window.API_BASE}/api/export/import-ahs`, { method:'POST', body: formData });
     const result = await res.json();
     alert(result.message || (result.error ? 'Error: ' + result.error : 'Import selesai'));
     loadAHS();
@@ -147,7 +149,7 @@ function importData() {
 }
 
 function logout() {
-  fetch('/api/auth/logout', { method: 'POST' }).finally(() => { window.location.href = '/login.html'; });
+  fetch(`${window.API_BASE}/api/auth/logout`, { method: 'POST' }).finally(() => { window.location.href = '/login.html'; });
 }
 
 function goBack() {

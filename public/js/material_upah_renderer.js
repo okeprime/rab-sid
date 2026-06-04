@@ -6,7 +6,9 @@ let sortOrder = { kode:'asc', name:'asc', unit:'asc', price:'asc', category:'asc
 
 // ── Helper API ─────────────────────────────────────────────────────────────────
 async function api(url, options = {}) {
-  const res = await fetch(url, { headers: {'Content-Type':'application/json'}, ...options });
+  url = (window.API_BASE || '') + url;
+  const res = await fetch(url, {
+    credentials: 'include', headers: {'Content-Type':'application/json'}, ...options });
   if (res.status === 401) { window.location.href = '/login.html'; return null; }
   return res.json();
 }
@@ -166,7 +168,7 @@ async function deleteAllMaterials() {
 
 // ── Export / Import ────────────────────────────────────────────────────────────
 function exportData() {
-  window.open('/api/export/materials', '_blank');
+  window.open(`${window.API_BASE}/api/export/materials`, '_blank');
 }
 
 function importData() {
@@ -178,7 +180,7 @@ function importData() {
     if (!file) return;
     const formData = new FormData();
     formData.append('file', file);
-    const res = await fetch('/api/export/import-materials', { method: 'POST', body: formData });
+    const res = await fetch(`${window.API_BASE}/api/export/import-materials`, { method: 'POST', body: formData });
     const result = await res.json();
     alert(result.message || (result.error ? 'Error: ' + result.error : 'Import selesai'));
     loadMaterials();
@@ -188,7 +190,7 @@ function importData() {
 
 // ── Logout ─────────────────────────────────────────────────────────────────────
 function logout() {
-  fetch('/api/auth/logout', { method: 'POST' }).finally(() => { window.location.href = '/login.html'; });
+  fetch(`${window.API_BASE}/api/auth/logout`, { method: 'POST' }).finally(() => { window.location.href = '/login.html'; });
 }
 
 function goBack() {

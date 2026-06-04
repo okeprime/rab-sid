@@ -33,6 +33,7 @@ function parseNum(value) {
 }
 
 async function api(url, options = {}) {
+  url = (window.API_BASE || '') + url;
   const headers = { 'Content-Type': 'application/json' };
   const res = await fetch(url, { headers, ...options });
   if (res.status === 401) { window.location.href = '/login.html'; return null; }
@@ -559,7 +560,7 @@ async function startImport() {
 
     const formData = new FormData();
     formData.append('file', file);
-    const res = await fetch('/api/export/import-ahs', { method: 'POST', body: formData });
+    const res = await fetch(`${window.API_BASE}/api/export/import-ahs`, { method: 'POST', body: formData });
     const result = await res.json();
 
     if (progressBar) progressBar.style.width = '100%';
@@ -578,7 +579,7 @@ async function startImport() {
 // MISC
 // ─────────────────────────────────────────────────────────────────────────────
 function logout() {
-  fetch('/api/auth/logout', { method: 'POST' }).finally(() => { window.location.href = '/login.html'; });
+  fetch(`${window.API_BASE}/api/auth/logout`, { method: 'POST' }).finally(() => { window.location.href = '/login.html'; });
 }
 function goBack() { window.location.href = 'index.html'; }
 

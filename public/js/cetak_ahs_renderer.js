@@ -2,7 +2,9 @@
 // Cetak/Print AHS page — mengganti ipcRenderer dengan fetch() + window.print()
 
 async function api(url, options = {}) {
-  const res = await fetch(url, { headers: { 'Content-Type': 'application/json' }, ...options });
+  url = (window.API_BASE || '') + url;
+  const res = await fetch(url, {
+    credentials: 'include', headers: { 'Content-Type': 'application/json' }, ...options });
   if (res.status === 401) { window.location.href = '/login.html'; return null; }
   return res.json();
 }
@@ -73,7 +75,7 @@ function printKesimpulan(){ downloadExcel('kesimpulan'); }
 
 // Logout
 function logout() {
-  fetch('/api/auth/logout', { method: 'POST' }).finally(() => { window.location.href = '/login.html'; });
+  fetch(`${window.API_BASE}/api/auth/logout`, { method: 'POST' }).finally(() => { window.location.href = '/login.html'; });
 }
 
 document.addEventListener('DOMContentLoaded', () => {

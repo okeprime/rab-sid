@@ -2,7 +2,9 @@
 // User List page (admin only) — mengganti ipcRenderer dengan fetch() API
 
 async function api(url, options = {}) {
-  const res = await fetch(url, { headers: {'Content-Type':'application/json'}, ...options });
+  url = (window.API_BASE || '') + url;
+  const res = await fetch(url, {
+    credentials: 'include', headers: {'Content-Type':'application/json'}, ...options });
   if (res.status === 401) { window.location.href = '/login.html'; return null; }
   if (res.status === 403) { alert('Akses ditolak - hanya admin'); window.location.href = '/index.html'; return null; }
   return res.json();
@@ -42,7 +44,7 @@ async function deleteUser(id, username) {
 }
 
 function logout() {
-  fetch('/api/auth/logout', { method: 'POST' }).finally(() => { window.location.href = '/login.html'; });
+  fetch(`${window.API_BASE}/api/auth/logout`, { method: 'POST' }).finally(() => { window.location.href = '/login.html'; });
 }
 
 function goBack() {

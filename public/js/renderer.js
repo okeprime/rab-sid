@@ -3,7 +3,9 @@
 
 // ── Helper ─────────────────────────────────────────────────────────────────────
 async function apiPost(url, data) {
+  url = (window.API_BASE || '') + url;
   const res = await fetch(url, {
+    credentials: 'include',
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),

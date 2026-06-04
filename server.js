@@ -3,11 +3,22 @@ require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
+const cors = require('cors');
 const path = require('path');
 const { initDatabase } = require('./src/database/init');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// ─── CORS ─────────────────────────────────────────────────────────────────────
+app.use(cors({
+  origin: [
+    'https://rab-sid.bbsdlp.com',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+  ],
+  credentials: true, // penting agar session/cookie dikirim
+}));
 
 // ─── Middleware ────────────────────────────────────────────────────────────────
 app.use(express.json());

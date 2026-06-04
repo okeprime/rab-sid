@@ -2,7 +2,9 @@
 // Dashboard utama — mengganti ipcRenderer dengan fetch() API
 
 async function api(url, options = {}) {
+  url = (window.API_BASE || '') + url;
   const res = await fetch(url, {
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     ...options,
   });
@@ -97,11 +99,11 @@ async function loadProjectInfo() {
 
 async function exportMyData() {
   // Download materials Excel
-  window.open('/api/export/materials', '_blank');
+  window.open(`${window.API_BASE}/api/export/materials`, '_blank');
 }
 
 function logout() {
-  fetch('/api/auth/logout', { method: 'POST' })
+  fetch(`${window.API_BASE}/api/auth/logout`, { method: 'POST' })
     .then(() => { window.location.href = '/login.html'; })
     .catch(() => { window.location.href = '/login.html'; });
 }
