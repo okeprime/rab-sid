@@ -9,7 +9,7 @@ async function api(url, options = {}) {
     ...options,
   });
   if (res.status === 401) {
-    window.location.href = '/login.html';
+    window.location.href = '/login';
     return null;
   }
   return res.json();
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Cek login & admin status
   const me = await api('/api/auth/me');
   if (!me || !me.loggedIn) {
-    window.location.href = '/login.html';
+    window.location.href = '/login';
     return;
   }
 
@@ -104,6 +104,6 @@ async function exportMyData() {
 
 function logout() {
   fetch(`${window.API_BASE}/api/auth/logout`, { method: 'POST' })
-    .then(() => { window.location.href = '/login.html'; })
-    .catch(() => { window.location.href = '/login.html'; });
+    .then(() => { window.location.href = '/login'; })
+    .catch(() => { window.location.href = '/login'; });
 }

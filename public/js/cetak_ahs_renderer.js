@@ -5,7 +5,7 @@ async function api(url, options = {}) {
   url = (window.API_BASE || '') + url;
   const res = await fetch(url, {
     credentials: 'include', headers: { 'Content-Type': 'application/json' }, ...options });
-  if (res.status === 401) { window.location.href = '/login.html'; return null; }
+  if (res.status === 401) { window.location.href = '/login'; return null; }
   return res.json();
 }
 
@@ -75,7 +75,7 @@ function printKesimpulan(){ downloadExcel('kesimpulan'); }
 
 // Logout
 function logout() {
-  fetch(`${window.API_BASE}/api/auth/logout`, { method: 'POST' }).finally(() => { window.location.href = '/login.html'; });
+  fetch(`${window.API_BASE}/api/auth/logout`, { method: 'POST' }).finally(() => { window.location.href = '/login'; });
 }
 
 document.addEventListener('DOMContentLoaded', () => {

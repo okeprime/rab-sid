@@ -27,7 +27,7 @@ async function attemptLogin() {
     const result = await apiPost('/api/auth/login', { username, password });
     if (result.success) {
       showSuccess(result.message);
-      window.location.href = '/index.html';
+      window.location.href = '/index';
     } else {
       showError(result.message);
     }

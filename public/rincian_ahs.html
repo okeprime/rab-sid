@@ -358,50 +358,42 @@
             style="display: none; margin: 20px 0; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
             <!-- Bahan -->
             <div style="display: flex; align-items: center; margin: 8px 0; gap: 10px;">
-                <span style="width: 80px;">Bahan</span>
-                <div style="flex: 1; background: var(--background); border-radius: 4px; overflow: hidden;">
-                    <div id="bahan-bar" style="width: 0%; height: 24px; background: #8b5cf6; position: relative;">
-                        <span class="percentage"
-                            style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); color: white;">0%</span>
-                    </div>
+                <div style="width: 80px;">Bahan</div>
+                <div style="flex: 1; background: var(--background); border-radius: 4px; position: relative;">
+                    <div id="bahan-bar" style="width: 0%; height: 24px; background: #8b5cf6; border-radius: 4px;"></div>
+                    <span class="percentage" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-weight: 600; text-shadow: 0 0 4px white, 0 0 4px white;">0%</span>
                 </div>
-                <span style="width: 150px; text-align: right;">Rp. <span id="bahan-value">0</span></span>
+                <div style="width: 150px; text-align: right;">Rp. <span id="bahan-value">0</span></div>
             </div>
 
             <!-- Upah -->
             <div style="display: flex; align-items: center; margin: 8px 0; gap: 10px;">
-                <span style="width: 80px;">Upah</span>
-                <div style="flex: 1; background: var(--background); border-radius: 4px; overflow: hidden;">
-                    <div id="upah-bar" style="width: 0%; height: 24px; background: #a78bfa; position: relative;">
-                        <span class="percentage"
-                            style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); color: white;">0%</span>
-                    </div>
+                <div style="width: 80px;">Upah</div>
+                <div style="flex: 1; background: var(--background); border-radius: 4px; position: relative;">
+                    <div id="upah-bar" style="width: 0%; height: 24px; background: #a78bfa; border-radius: 4px;"></div>
+                    <span class="percentage" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-weight: 600; text-shadow: 0 0 4px white, 0 0 4px white;">0%</span>
                 </div>
-                <span style="width: 150px; text-align: right;">Rp. <span id="upah-value">0</span></span>
+                <div style="width: 150px; text-align: right;">Rp. <span id="upah-value">0</span></div>
             </div>
 
             <!-- Alat -->
             <div style="display: flex; align-items: center; margin: 8px 0; gap: 10px;">
-                <span style="width: 80px;">Alat</span>
-                <div style="flex: 1; background: var(--background); border-radius: 4px; overflow: hidden;">
-                    <div id="alat-bar" style="width: 0%; height: 24px; background: #c4b5fd; position: relative;">
-                        <span class="percentage"
-                            style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); color: white;">0%</span>
-                    </div>
+                <div style="width: 80px;">Alat</div>
+                <div style="flex: 1; background: var(--background); border-radius: 4px; position: relative;">
+                    <div id="alat-bar" style="width: 0%; height: 24px; background: #c4b5fd; border-radius: 4px;"></div>
+                    <span class="percentage" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-weight: 600; text-shadow: 0 0 4px white, 0 0 4px white;">0%</span>
                 </div>
-                <span style="width: 150px; text-align: right;">Rp. <span id="alat-value">0</span></span>
+                <div style="width: 150px; text-align: right;">Rp. <span id="alat-value">0</span></div>
             </div>
 
             <!-- Total -->
             <div style="display: flex; align-items: center; margin: 8px 0; gap: 10px;">
-                <span style="width: 80px;">Total</span>
-                <div style="flex: 1; background: var(--background); border-radius: 4px; overflow: hidden;">
-                    <div id="total-bar" style="width: 100%; height: 24px; background: #1e40af; position: relative;">
-                        <span class="percentage"
-                            style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); color: white;">100%</span>
-                    </div>
+                <div style="width: 80px; font-weight: bold;">Total</div>
+                <div style="flex: 1; background: var(--background); border-radius: 4px; position: relative;">
+                    <div id="total-bar" style="width: 100%; height: 24px; background: #1e40af; border-radius: 4px;"></div>
+                    <span class="percentage" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-weight: 600; color: white;">100%</span>
                 </div>
-                <span style="width: 150px; text-align: right;">Rp. <span id="total-value">0</span></span>
+                <div style="width: 150px; text-align: right; font-weight: bold;">Rp. <span id="total-value">0</span></div>
             </div>
         </div>
 
@@ -410,7 +402,7 @@
             style="margin: 20px 0; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
             <!-- Profit -->
             <div style="display: flex; align-items: center; margin: 8px 0; gap: 10px;">
-                <span style="width: 80px;">Profit</span>
+                <div style="width: 80px;">Profit</div>
                 <select id="profit-select" style="padding: 8px; border-radius: 4px; border: 1px solid var(--border);">
                     <option value="0">0%</option>
                     <option value="10">10%</option>
@@ -420,27 +412,27 @@
                     <option value="14">14%</option>
                     <option value="15">15%</option>
                 </select>
-                <span style="flex: 1;"></span>
-                <span style="width: 150px; text-align: right;">Rp. <span id="profit-value">0</span></span>
+                <div style="flex: 1;"></div>
+                <div style="width: 150px; text-align: right;">Rp. <span id="profit-value">0</span></div>
             </div>
 
             <!-- PPN -->
             <div style="display: flex; align-items: center; margin: 8px 0; gap: 10px;">
-                <span style="width: 80px;">PPN</span>
+                <div style="width: 80px;">PPN</div>
                 <select id="ppn-select" style="padding: 8px; border-radius: 4px; border: 1px solid var(--border);">
                     <option value="0" selected>0%</option>
                     <option value="10">10%</option>
                     <option value="11">11%</option>
                 </select>
                 <div style="flex: 1;"></div>
-                <span style="width: 150px; text-align: right;">Rp. <span id="ppn-value">0</span></span>
+                <div style="width: 150px; text-align: right;">Rp. <span id="ppn-value">0</span></div>
             </div>
 
             <!-- Grand Total -->
             <div style="display: flex; align-items: center; margin: 8px 0; gap: 10px; font-weight: bold;">
-                <span style="width: 80px;">Total Akhir</span>
+                <div style="width: 80px;">Total Akhir</div>
                 <div style="flex: 1;"></div>
-                <span style="width: 150px; text-align: right;">Rp. <span id="grand-total-value">0</span></span>
+                <div style="width: 150px; text-align: right;">Rp. <span id="grand-total-value">0</span></div>
             </div>
             <div style="display: flex; justify-content: flex-end; margin-top: 15px;">
                 <button class="action-btn" onclick="saveTotalAfterTaxProfit()" style="background-color: var(--success)">

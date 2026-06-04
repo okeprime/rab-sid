@@ -32,11 +32,22 @@ function parseNum(value) {
   return parseFloat(String(value).replace(',', '.')) || 0;
 }
 
+/**
+ * Menentukan step presisi koefisien berdasarkan kategori.
+ * Sesuai dengan aplikasi RAB asli.
+ */
+function getStepForCategory(category) {
+  const cat = (category || '').toLowerCase();
+  if (cat.includes('upah') || cat.includes('tenaga')) return '0.001';
+  if (cat.includes('alat') || cat.includes('equipment')) return '0.0001';
+  return '0.0001'; // Bahan dan default
+}
+
 async function api(url, options = {}) {
   url = (window.API_BASE || '') + url;
   const headers = { 'Content-Type': 'application/json' };
   const res = await fetch(url, { headers, ...options });
-  if (res.status === 401) { window.location.href = '/login.html'; return null; }
+  if (res.status === 401) { window.location.href = '/login'; return null; }
   return res.json();
 }
 
@@ -262,6 +273,7 @@ function displayPricingData(pricingData) {
     const price = parseNum(item.price || 0);
     const koefisien = parseNum(item.koefisien || 0);
     const total = price * koefisien;
+    const stepValue = getStepForCategory(item.category);
 
     const row = document.createElement('tr');
     // Simpan data numerik di dataset, BUKAN string terformat, agar calculateTotals() tidak salah parse
@@ -274,7 +286,7 @@ function displayPricingData(pricingData) {
       <td>${item.kode || '-'}</td>
       <td>${item.name}</td>
       <td>${item.unit}</td>
-      <td><input type="text" inputmode="decimal" value="${koefisien}" style="width:90px;padding:6px;border:1px solid #ddd;border-radius:4px;"></td>
+      <td><input type="number" step="${stepValue}" value="${koefisien}" style="width:90px;padding:6px;border:1px solid #ddd;border-radius:4px;"></td>
       <td>Rp ${formatRupiah(price)}</td>
       <td>${item.lokasi || '-'}</td>
       <td>${item.sumber_data || '-'}</td>
@@ -415,6 +427,7 @@ async function selectMaterial(id, kode, name, price, unit, lokasi, sumber_data, 
   const koefisien = 1;
   const normalizedPrice = parseNum(price);
   const total = normalizedPrice * koefisien;
+  const stepValue = getStepForCategory(category);
 
   const tableBody = document.getElementById('materialDetails');
   if (!tableBody) return;
@@ -428,7 +441,7 @@ async function selectMaterial(id, kode, name, price, unit, lokasi, sumber_data, 
     <td>${kode || '-'}</td>
     <td>${name}</td>
     <td>${unit}</td>
-    <td><input type="text" inputmode="decimal" value="${koefisien}" style="width:90px;padding:6px;border:1px solid #ddd;border-radius:4px;"></td>
+    <td><input type="number" step="${stepValue}" value="${koefisien}" style="width:90px;padding:6px;border:1px solid #ddd;border-radius:4px;"></td>
     <td>Rp ${formatRupiah(normalizedPrice)}</td>
     <td>${lokasi || '-'}</td>
     <td>${sumber_data || '-'}</td>
@@ -579,7 +592,7 @@ async function startImport() {
 // MISC
 // ─────────────────────────────────────────────────────────────────────────────
 function logout() {
-  fetch(`${window.API_BASE}/api/auth/logout`, { method: 'POST' }).finally(() => { window.location.href = '/login.html'; });
+  fetch(`${window.API_BASE}/api/auth/logout`, { method: 'POST' }).finally(() => { window.location.href = '/login'; });
 }
 function goBack() { window.location.href = 'index.html'; }
 

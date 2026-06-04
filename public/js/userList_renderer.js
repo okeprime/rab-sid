@@ -5,8 +5,8 @@ async function api(url, options = {}) {
   url = (window.API_BASE || '') + url;
   const res = await fetch(url, {
     credentials: 'include', headers: {'Content-Type':'application/json'}, ...options });
-  if (res.status === 401) { window.location.href = '/login.html'; return null; }
-  if (res.status === 403) { alert('Akses ditolak - hanya admin'); window.location.href = '/index.html'; return null; }
+  if (res.status === 401) { window.location.href = '/login'; return null; }
+  if (res.status === 403) { alert('Akses ditolak - hanya admin'); window.location.href = '/index'; return null; }
   return res.json();
 }
 
@@ -44,7 +44,7 @@ async function deleteUser(id, username) {
 }
 
 function logout() {
-  fetch(`${window.API_BASE}/api/auth/logout`, { method: 'POST' }).finally(() => { window.location.href = '/login.html'; });
+  fetch(`${window.API_BASE}/api/auth/logout`, { method: 'POST' }).finally(() => { window.location.href = '/login'; });
 }
 
 function goBack() {
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const me = await api('/api/auth/me');
   if (!me || !me.isAdmin) {
     alert('Halaman ini hanya untuk admin');
-    window.location.href = '/index.html';
+    window.location.href = '/index';
     return;
   }
   loadUsers();
