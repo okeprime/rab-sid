@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Bahan Upah & Alat</title>
+    <style>
+        :root {
+            --primary: #1a4f7c;
+            --secondary: #f26522;
+            --accent: #58595b;
+            --background: #f5f5f5;
+            --white: #ffffff;
+            --border: #dde1e4;
+            --shadow: rgba(26, 79, 124, 0.1);
+            --hover: #183f62;
+            --error: #dc3545;
+            --success: #28a745;
+            --warning: #ffc107;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 2% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 460px;
+            max-height: 85vh;
+            position: relative;
+            animation: slideIn 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            position: sticky;
+            bottom: 0;
+            background: var(--white);
+            padding: 15px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Top bar styles */
+        .top-bar {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px var(--shadow);
+        }
+
+        .top-bar h1 {
+            margin: 0;
+            color: var(--white);
+            font-size: 24px;
+        }
+
+        /* Container styles */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow);
+            flex: 1;
+        }
+
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 25px 0;
+            box-shadow: 0 2px 4px var(--shadow);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: var(--primary);
+            color: var(--white);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        tr:hover {
+            background-color: #f0f4f8;
+        }
+
+        /* Search bar styles */
+        .search-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* Button styles */
+        .action-btn {
+            background-color: var(--secondary);
+            color: var(--white);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 90px;
+        }
+
+        .nav-btn {
+            background-color: transparent;
+            border: 2px solid var(--white);
+            color: var(--white);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--white);
+            color: var(--primary);
+        }
+
+        .nav-btn.danger {
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        .nav-btn.danger:hover {
+            background-color: var(--error);
+            color: var(--white);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+            opacity: 0.9;
+        }
+
+        .action-btn.edit {
+            background-color: var(--warning);
+        }
+
+        .action-btn.delete {
+            background-color: var(--error);
+        }
+
+        .close {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-bar">
+        <button class="nav-btn" onclick="window.location.href='index.html'">← Kembali</button>
+        <h1>Daftar Bahan Upah & Alat</h1>
+        <button class="nav-btn danger" onclick="logout()">Keluar</button>
+    </div>
+
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" id="searchInput" class="search-input" placeholder="Cari Bahan / Upah / Alat"
+                autocomplete="off">
+            <div style="display: flex; gap: 10px;">
+                <button class="action-btn" onclick="exportData()" style="background-color: var(--primary);">
+                    Export Data
+                </button>
+                <button class="action-btn" onclick="importData()" style="background-color: var(--accent);">
+                    Import Data
+                </button>
+                <button class="action-btn delete" onclick="deleteAllMaterials()">
+                    Hapus Semua
+                </button>
+                <button class="action-btn" onclick="addNewMaterial()">
+                    <span>+</span> Tambah Baru
+                </button>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th onclick="sortTable('kode')">
+                        <div style="display: flex; align-items: center;">
+                            KODE <span class="sort-icon">↕</span>
+                        </div>
+                    </th>
+                    <th onclick="sortTable('name')">
+                        <div style="display: flex; align-items: center;">
+                            NAMA <span class="sort-icon">↕</span>
+                        </div>
+                    </th>
+                    <th onclick="sortTable('unit')">
+                        <div style="display: flex; align-items: center;">
+                            SATUAN <span class="sort-icon">↕</span>
+                        </div>
+                    </th>
+                    <th onclick="sortTable('price')">
+                        <div style="display: flex; align-items: center;">
+                            HARGA <span class="sort-icon">↕</span>
+                        </div>
+                    </th>
+                    <th onclick="sortTable('category')">
+                        <div style="display: flex; align-items: center;">
+                            KATEGORI <span class="sort-icon">↕</span>
+                        </div>
+                    </th>
+                    <th onclick="sortTable('lokasi')">
+                        <div style="display: flex; align-items: center;">
+                            LOKASI <span class="sort-icon">↕</span>
+                        </div>
+                    </th>
+                    <th onclick="sortTable('sumber_data')">
+                        <div style="display: flex; align-items: center;">
+                            SUMBER DATA <span class="sort-icon">↕</span>
+                        </div>
+                    </th>
+                    <th onclick="sortTable('created_at')">
+                        <div style="display: flex; align-items: center;">
+                            UPDATE TERAKHIR <span class="sort-icon">↕</span>
+                        </div>
+                    </th>
+                    <th>AKSI</th>
+                </tr>
+            </thead>
+            <tbody id="materialTableBody">
+                <!-- Data rows will be populated here -->
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <p>Total: <span id="materialCount" style="font-weight: 600;">0</span> Bahan & Upah</p>
+        </div>
+    </div>
+
+    <!-- Modal untuk menambah material baru -->
+    <div id="addMaterialModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddModal()">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 20px;">Tambah Material/Upah Baru</h2>
+            <div class="form-group">
+                <label for="newKode">Kode:</label>
+                <input type="text" id="newKode" required placeholder="Masukkan kode" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="newName">Nama:</label>
+                <input type="text" id="newName" list="materialNamesList" required placeholder="Masukkan nama"
+                    autocomplete="off">
+                <datalist id="materialNamesList">
+                    <!-- Will be populated dynamically -->
+                </datalist>
+            </div>
+            <div class="form-group">
+                <label for="newUnit">Satuan:</label>
+                <input type="text" id="newUnit" list="materialUnitsList" required placeholder="Masukkan satuan"
+                    autocomplete="off">
+                <datalist id="materialUnitsList">
+                    <!-- Will be populated dynamically -->
+                </datalist>
+            </div>
+            <div class="form-group">
+                <label for="newPrice">Harga:</label>
+                <input type="number" id="newPrice" required placeholder="Masukkan harga" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="newCategory">Kategori:</label>
+                <select id="newCategory" required>
+                    <option value="Bahan">Bahan</option>
+                    <option value="Upah">Upah</option>
+                    <option value="Alat">Alat</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="newLokasi">Lokasi:</label>
+                <input type="text" id="newLokasi" list="materialLokasiList" placeholder="Masukkan lokasi"
+                    autocomplete="off">
+                <datalist id="materialLokasiList">
+                    <!-- Will be populated dynamically -->
+                </datalist>
+            </div>
+            <div class="form-group">
+                <label for="newSumberData">Sumber Data:</label>
+                <input type="text" id="newSumberData" list="materialSumberDataList" placeholder="Masukkan sumber data"
+                    autocomplete="off">
+                <datalist id="materialSumberDataList">
+                    <!-- Will be populated dynamically -->
+                </datalist>
+            </div>
+            <div class="modal-buttons">
+                <button class="action-btn" onclick="closeAddModal()"
+                    style="background-color: var(--accent)">Batal</button>
+                <button class="action-btn" onclick="saveMaterial()"
+                    style="background-color: var(--success)">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal untuk Edit Material -->
+    <div id="editMaterialModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 20px;">Edit Bahan Upah & Alat</h2>
+            <div class="form-group">
+                <label for="editKode">Kode:</label>
+                <input type="text" id="editKode" required placeholder="Masukkan kode">
+            </div>
+            <div class="form-group">
+                <label for="editName">Nama:</label>
+                <input type="text" id="editName" list="materialNamesList" required placeholder="Masukkan nama">
+            </div>
+            <div class="form-group">
+                <label for="editUnit">Satuan:</label>
+                <input type="text" id="editUnit" list="materialUnitsList" required placeholder="Masukkan satuan">
+            </div>
+            <div class="form-group">
+                <label for="editPrice">Harga Satuan:</label>
+                <input type="number" id="editPrice" required placeholder="Masukkan harga">
+            </div>
+            <div class="form-group">
+                <label for="editCategory">Kategori:</label>
+                <select id="editCategory" required>
+                    <option value="Bahan">Bahan</option>
+                    <option value="Upah">Upah</option>
+                    <option value="Alat">Alat</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="editLokasi">Lokasi:</label>
+                <input type="text" id="editLokasi" list="materialLokasiList" placeholder="Masukkan lokasi">
+            </div>
+            <div class="form-group">
+                <label for="editSumberData">Sumber Data:</label>
+                <input type="text" id="editSumberData" list="materialSumberDataList" placeholder="Masukkan sumber data">
+            </div>
+            <div class="modal-buttons">
+                <button class="action-btn" onclick="closeEditModal()"
+                    style="background-color: var(--accent)">Batal</button>
+                <button class="action-btn edit" onclick="updateMaterial()">Update</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/material_upah_renderer.js"></script>
+    <footer class="footer">
+        <div>Balai Besar Pengujian Standar Instrumen Sumberdaya Lahan Pertanian</div>
+        <div class="social-links">
+            <a href="https://www.facebook.com/BBSDLP/?locale=id_ID" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook">
+            </a>
+            <a href="https://www.instagram.com/bsip_sdlp/" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+            </a>
+            <a href="https://www.youtube.com/@bbsdlp5005/" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube">
+            </a>
+            <a href="https://sdlp.bsip.pertanian.go.id/" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png" alt="Website">
+            </a>
+        </div>
+    </footer>
+
+    <style>
+        .footer {
+            background-color: var(--primary);
+            color: var(--white);
+            text-align: center;
+            padding: 20px;
+            margin-top: auto;
+        }
+
+        .social-links {
+            margin-top: 10px;
+        }
+
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-2px);
+            opacity: 0.8;
+        }
+
+        .social-links img {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</body>
+
+</html>

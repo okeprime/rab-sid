@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Kalkulator Persegi - RAB Application</title>
+    <style>
+        :root {
+            --primary: #1a4f7c;
+            --secondary: #f26522;
+            --accent: #58595b;
+            --background: #f5f5f5;
+            --white: #ffffff;
+            --border: #dde1e4;
+            --shadow: rgba(26, 79, 124, 0.1);
+            --hover: #183f62;
+        }
+
+        /* Keep all existing styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background);
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px var(--shadow);
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--white);
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 4px var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .canvas-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+
+        #persegiCanvas {
+            width: 100%;
+            height: 300px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .instructions {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--accent);
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--shadow);
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: var(--background);
+            border-radius: 4px;
+            color: var(--primary);
+            font-size: 16px;
+        }
+
+        .result div {
+            margin: 8px 0;
+        }
+
+        .formula-section {
+            margin-top: 30px;
+        }
+
+        .formula-section h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .formula {
+            background: var(--background);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-family: monospace;
+        }
+
+        .info-section {
+            margin-top: 30px;
+        }
+
+        .value {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* Add reset button styles */
+        .button-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .reset-btn {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .reset-btn:hover {
+            background-color: var(--hover);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-bar">
+        <button class="back-btn" onclick="window.location.href='kalkulator_hitung.html'">
+            ← Kembali
+        </button>
+        <h1>Kalkulator Persegi</h1>
+        <div style="width: 80px;"></div>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <div class="instructions">
+                Masukkan dua nilai. Nilai lainnya akan dihitung secara otomatis.
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="persegiCanvas"></canvas>
+            </div>
+
+            <div class="input-group">
+                <label>Sisi a:</label>
+                <input type="number" id="sisi-a" step="0.1" oninput="updatePersegi()">
+            </div>
+
+            <div class="input-group">
+                <label>Sisi b:</label>
+                <input type="number" id="sisi-b" step="0.1" oninput="updatePersegi()">
+            </div>
+
+            <!-- Add reset button -->
+            <div class="button-container">
+                <button class="reset-btn" onclick="resetCalculator()">Reset</button>
+            </div>
+
+            <div class="result">
+                <div>Luas: <span id="luas" class="value">0</span></div>
+                <div>Keliling: <span id="keliling" class="value">0</span></div>
+                <div>Diagonal: <span id="diagonal" class="value">0</span></div>
+            </div>
+        </div>
+
+        <div class="card formula-section">
+            <h3>Rumus Persegi Panjang:</h3>
+            <div class="formula">
+                • Luas = a × b
+            </div>
+            <div class="formula">
+                • Keliling = 2 × a + 2 × b
+            </div>
+            <div class="formula">
+                • Diagonal = √(a² + b²)
+            </div>
+        </div>
+
+        <div class="card info-section">
+            <h3>Apa itu Persegi Panjang?</h3>
+            <p>
+                Persegi panjang adalah bangun datar dua dimensi yang dibentuk oleh dua pasang sisi sejajar dan
+                memiliki empat sudut siku-siku (90°).
+            </p>
+            <p>
+                Sifat-sifat persegi panjang:
+            </p>
+            <ul>
+                <li>Memiliki dua pasang sisi yang sama panjang dan sejajar</li>
+                <li>Semua sudutnya siku-siku (90°)</li>
+                <li>Kedua diagonalnya sama panjang dan saling membagi dua sama besar</li>
+                <li>Dapat dilipat menjadi dua bagian yang sama melalui sumbu simetrinya</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('persegiCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 600;
+        canvas.height = 300;
+
+        let highlightedPart = null;
+
+        function drawPersegi(highlight = null) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Set style default
+            ctx.strokeStyle = '#1a4f7c';
+            ctx.lineWidth = 2;
+            ctx.fillStyle = '#f5f5f5';
+
+            // Koordinat persegi
+            const width = 200;
+            const height = 150;
+            const x = (canvas.width - width) / 2;
+            const y = (canvas.height - height) / 2;
+
+            // Gambar persegi
+            ctx.beginPath();
+            ctx.rect(x, y, width, height);
+            ctx.fill();
+            ctx.stroke();
+
+            // Gambar diagonal dengan garis putus-putus
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + width, y + height);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Highlight bagian yang dipilih
+            if (highlight) {
+                ctx.strokeStyle = '#f26522';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+
+                switch (highlight) {
+                    case 'sisi-a':
+                        ctx.moveTo(x, y);
+                        ctx.lineTo(x + width, y);
+                        break;
+                    case 'sisi-b':
+                        ctx.moveTo(x, y);
+                        ctx.lineTo(x, y + height);
+                        break;
+                    case 'diagonal':
+                        ctx.setLineDash([5, 5]);
+                        ctx.moveTo(x, y);
+                        ctx.lineTo(x + width, y + height);
+                        break;
+                }
+
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            // Label sisi
+            ctx.font = '16px Arial';
+            ctx.fillStyle = '#1a4f7c';
+            ctx.textAlign = 'center';
+            ctx.fillText('a', x + width / 2, y - 10);
+            ctx.fillText('b', x - 20, y + height / 2);
+        }
+
+        function updatePersegi() {
+            const a = parseFloat(document.getElementById('sisi-a').value) || 0;
+            const b = parseFloat(document.getElementById('sisi-b').value) || 0;
+
+            if (a && b) {
+                const luas = a * b;
+                const keliling = 2 * (a + b);
+                const diagonal = Math.sqrt(a * a + b * b);
+
+                document.getElementById('luas').textContent = luas.toFixed(2);
+                document.getElementById('keliling').textContent = keliling.toFixed(2);
+                document.getElementById('diagonal').textContent = diagonal.toFixed(2);
+
+                if (a > 0 && b > 0) {
+                    highlightedPart = 'diagonal';
+                }
+            }
+
+            drawPersegi(highlightedPart);
+        }
+
+        // Add reset function
+        function resetCalculator() {
+            document.getElementById('sisi-a').value = '';
+            document.getElementById('sisi-b').value = '';
+            document.getElementById('luas').textContent = '0';
+            document.getElementById('keliling').textContent = '0';
+            document.getElementById('diagonal').textContent = '0';
+            highlightedPart = null;
+            drawPersegi();
+        }
+
+        // Event listeners
+        document.getElementById('sisi-a').addEventListener('focus', () => {
+            highlightedPart = 'sisi-a';
+            drawPersegi(highlightedPart);
+        });
+
+        document.getElementById('sisi-b').addEventListener('focus', () => {
+            highlightedPart = 'sisi-b';
+            drawPersegi(highlightedPart);
+        });
+
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('blur', () => {
+                const a = parseFloat(document.getElementById('sisi-a').value) || 0;
+                const b = parseFloat(document.getElementById('sisi-b').value) || 0;
+                highlightedPart = (a > 0 && b > 0) ? 'diagonal' : null;
+                drawPersegi(highlightedPart);
+            });
+        });
+
+        // Initial draw
+        drawPersegi();
+    </script>
+</body>
+
+</html>

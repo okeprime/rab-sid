@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Bill of Quantity - RAB</title>
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --accent: #1e40af;
+            --warning: #fbbf24;
+            --error: #ef4444;
+            --background: #f3f4f6;
+            --white: #ffffff;
+            --border: #e5e7eb;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --text: #1f2937;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text);
+        }
+
+        .top-bar {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px var(--shadow);
+        }
+
+        .top-bar h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .back-btn {
+            background-color: transparent;
+            border: 2px solid var(--white);
+            color: var(--white);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background-color: var(--white);
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px var(--shadow);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: var(--text);
+        }
+
+        .btn-danger {
+            background-color: var(--error);
+            color: var(--white);
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 20px;
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px var(--shadow);
+        }
+
+        .results-table th {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .results-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .results-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .results-table tr:hover td {
+            background-color: var(--background);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--white);
+            margin: 40px auto;
+            padding: 24px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal h2 {
+            color: var(--text);
+            margin: 0 0 20px 0;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .ahs-list {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .ahs-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .ahs-item:hover {
+            background-color: var(--background);
+        }
+
+        .ahs-item:last-child {
+            border-bottom: none;
+        }
+
+        .shape-form {
+            display: none;
+            margin-top: 16px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background-color: var(--background);
+        }
+
+        .shape-form.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .edit-shape-form {
+            display: none;
+            margin-top: 16px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background-color: var(--background);
+        }
+
+        .edit-shape-form.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text);
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.2s ease;
+        }
+
+        .close-btn:hover {
+            opacity: 1;
+        }
+
+        .subproject-section {
+            background: var(--white);
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px var(--shadow);
+            overflow: hidden;
+        }
+
+        .subproject-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .subproject-header h2 {
+            margin: 0;
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        .subproject-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .button-container {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-bar">
+        <h1>Bill of Quantity</h1>
+        <button class="back-btn" onclick="window.history.back()">← Kembali</button>
+    </div>
+
+    <div class="container">
+        <button class="btn btn-primary" onclick="openAHSModal()">
+            <span>+</span> Tambah AHS
+        </button>
+
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th>Kode AHS</th>
+                    <th>AHS</th>
+                    <th>Volume</th>
+                    <th>Satuan</th>
+                    <th>Total Harga</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="bqTableBody">
+                <!-- Data will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- AHS Selection Modal -->
+    <div id="ahsModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeAHSModal()">&times;</button>
+            <h2>Pilih AHS</h2>
+            <div class="form-group">
+                <input type="text" id="ahsSearchInput" placeholder="Cari berdasarkan kode atau nama AHS..."
+                    style="width: 100%; margin-bottom: 16px;">
+            </div>
+            <div class="ahs-list" id="ahsList">
+                <!-- AHS items will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Volume Input Modal -->
+    <div id="volumeModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeVolumeModal()">&times;</button>
+            <h2>Input Volume</h2>
+            <div class="form-group">
+                <label for="volumeInput">Volume:</label>
+                <input type="text" inputmode="decimal" id="volumeInput" placeholder="Contoh: 10.5 atau 10,5">
+            </div>
+            <div class="form-group">
+                <label for="satuanSelect">Satuan:</label>
+                <select id="satuanSelect" onchange="handleSatuanChange()">
+                    <option value="m">m</option>
+                    <option value="m2">m²</option>
+                    <option value="m3">m³</option>
+                    <option value="manual">Input Manual</option>
+                </select>
+            </div>
+            <div class="form-group" id="manualSatuanGroup" style="display: none;">
+                <label for="manualSatuan">Satuan Manual:</label>
+                <input type="text" id="manualSatuan" placeholder="Contoh: kg, ton, dll">
+            </div>
+            <div class="modal-actions">
+                <button class="btn" onclick="closeVolumeModal()">Batal</button>
+                <button class="btn btn-primary" onclick="saveVolumeAndSatuan()">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeEditModal()">&times;</button>
+            <h2>Edit Item</h2>
+            <div class="form-group">
+                <label for="editVolume">Volume:</label>
+                <input type="text" inputmode="decimal" id="editVolume" placeholder="Contoh: 10.5 atau 10,5">
+            </div>
+            <div class="form-group">
+                <label for="editSatuanSelect">Satuan:</label>
+                <select id="editSatuanSelect" onchange="handleEditSatuanChange()">
+                    <option value="m">m</option>
+                    <option value="m2">m²</option>
+                    <option value="m3">m³</option>
+                    <option value="manual">Input Manual</option>
+                </select>
+            </div>
+            <div class="form-group" id="editManualSatuanGroup" style="display: none;">
+                <label for="editManualSatuan">Satuan Manual:</label>
+                <input type="text" id="editManualSatuan" placeholder="Contoh: kg, ton, dll">
+            </div>
+            <div class="modal-actions">
+                <button class="btn" onclick="closeEditModal()">Batal</button>
+                <button class="btn btn-primary" onclick="saveEditedData()">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/bq_renderer.js"></script>
+    <script src="js/bq_search.js"></script>
+    <script>
+        // Initialize search functionality when document is loaded
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeAHSSearch();
+        });
+
+        // Clear search when modal is closed
+        function closeAHSModal() {
+            clearAHSSearch();
+            const modal = document.getElementById("ahsModal");
+            modal.classList.remove("active");
+            setTimeout(() => {
+                modal.style.display = "none";
+            }, 300);
+        }
+    </script>
+</body>
+
+</html>
