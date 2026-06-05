@@ -48,7 +48,7 @@ async function downloadExcel(type) {
     }
     // Buka tab baru untuk download
     const a = document.createElement('a');
-    a.href = url;
+    a.href = (window.API_BASE || '') + url;
     a.target = '_blank';
     a.click();
   } finally {
@@ -82,3 +82,14 @@ document.addEventListener('DOMContentLoaded', () => {
   loadProjectInfo();
   setupBackButton();
 });
+
+// === GLOBAL SCOPE EXPORTS ===
+window.printAll = printAll;
+window.printWages = printWages;
+window.printMaterials = printMaterials;
+window.printAhsOnly = printAhsOnly;
+window.printBQ = printBQ;
+window.printRekapBQ = printRekapBQ;
+window.printKesimpulan = printKesimpulan;
+window.print = print;
+window.logout = logout;

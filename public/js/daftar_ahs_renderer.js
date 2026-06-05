@@ -168,3 +168,17 @@ document.addEventListener('DOMContentLoaded', () => {
   loadAHSSuggestions();
   initSearchAHS();
 });
+
+// === GLOBAL SCOPE EXPORTS ===
+window.addNewAhs = addNewAhs;
+window.closeAddAHSModal = closeAddAHSModal;
+window.closeEditAHSModal = closeEditAHSModal;
+window.saveAhs = saveAhs;
+window.editAHS = editAHS;
+window.updateAHS = updateAHS;
+window.deleteAHS = deleteAHS;
+window.deleteAllAhs = deleteAllAhs;
+window.exportData = exportData;
+window.importData = importData;
+window.logout = logout;
+window.goBack = goBack;
