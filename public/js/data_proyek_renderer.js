@@ -62,7 +62,7 @@ document.getElementById('projectForm')?.addEventListener('submit', async (e) => 
 });
 
 function logout() {
-  fetch(`https://rab-sid.up.railway.app/api/auth/logout`, { method: 'POST' }).finally(() => { // window.location.href = '/login'; });
+  fetch(`https://rab-sid.up.railway.app/api/auth/logout`, { method: 'POST' }).finally(() => {});
 }
 
 function goBack() {

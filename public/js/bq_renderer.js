@@ -328,7 +328,7 @@ async function deleteSubproject(id) {
 }
 
 // ── Misc ───────────────────────────────────────────────────────────────────────
-function logout() { fetch(`https://rab-sid.up.railway.app/api/auth/logout`, { method: 'POST' }).finally(() => { // window.location.href = '/login'; }); }
+function logout() { fetch(`https://rab-sid.up.railway.app/api/auth/logout`, { method: 'POST' }).finally(() => {}); }
 
 function goBack() {
   window.location.href = 'index.html';

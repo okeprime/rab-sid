@@ -75,7 +75,7 @@ function printKesimpulan(){ downloadExcel('kesimpulan'); }
 
 // Logout
 function logout() {
-  fetch(`https://rab-sid.up.railway.app/api/auth/logout`, { method: 'POST' }).finally(() => { // window.location.href = '/login'; });
+  fetch(`https://rab-sid.up.railway.app/api/auth/logout`, { method: 'POST' }).finally(() => {});
 }
 
 document.addEventListener('DOMContentLoaded', () => {

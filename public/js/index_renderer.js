@@ -97,6 +97,6 @@ async function exportMyData() {
 
 function logout() {
   fetch(`https://rab-sid.up.railway.app/api/auth/logout`, { method: 'POST' })
-    .then(() => { // window.location.href = '/login'; })
-    .catch(() => { // window.location.href = '/login'; });
+    .then(() => {})
+    .catch(() => {});
 }
