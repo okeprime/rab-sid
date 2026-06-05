@@ -2,15 +2,10 @@
 // Middleware untuk memastikan user sudah login sebelum akses halaman/API
 
 function requireLogin(req, res, next) {
-  if (req.session && req.session.userId) {
-    return next();
-  }
-  // Jika request adalah API, kembalikan JSON error
-  if (req.path.startsWith('/api/')) {
-    return res.status(401).json({ error: 'Unauthorized - Silakan login terlebih dahulu' });
-  }
-  // Jika request adalah halaman HTML, redirect ke login
-  return res.redirect('/login.html');
+  // Bypass login: semua pengguna otomatis menggunakan akun utama (user_id = 1)
+  if (!req.session) req.session = {};
+  req.session.userId = 1;
+  return next();
 }
 
 function requireAdmin(req, res, next) {
