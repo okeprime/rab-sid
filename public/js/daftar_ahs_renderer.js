@@ -204,3 +204,4 @@ window.importData = importData;
 window.logout = logout;
 window.goBack = goBack;
 window.toggleManualInput = toggleManualInput;
+window.sortTable = sortAHSTable;
