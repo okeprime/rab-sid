@@ -130,7 +130,7 @@ function calculateTotals() {
 
     if (bar) {
       bar.style.width = pct + '%';
-      const pctEl = bar.parentElement.querySelector('.percentage');
+      const pctEl = bar.querySelector('.percentage');
       if (pctEl) pctEl.textContent = pct + '%';
     }
     if (valEl) valEl.textContent = formatRupiah(val);
@@ -140,7 +140,7 @@ function calculateTotals() {
   const totalBar = document.getElementById('total-bar');
   if (totalBar) {
     totalBar.style.width = '100%';
-    const pctEl = totalBar.parentElement.querySelector('.percentage');
+    const pctEl = totalBar.querySelector('.percentage');
     if (pctEl) pctEl.textContent = '100%';
   }
   const totalValueEl = document.getElementById('total-value');
@@ -604,3 +604,31 @@ styleEl.textContent = `
   #materialDetails input:focus { outline: 2px solid var(--primary, #1a4f7c); border-radius: 4px; }
 `;
 document.head.appendChild(styleEl);
+
+// === GLOBAL SCOPE EXPORTS ===
+// Mengekspos semua fungsi ke window agar bisa dipanggil dari atribut onclick di HTML
+window.formatRupiah = formatRupiah;
+window.parseRupiah = parseRupiah;
+window.parseNum = parseNum;
+window.getStepForCategory = getStepForCategory;
+window.calculateTotals = calculateTotals;
+window.resetToDefaults = resetToDefaults;
+window.openAhsModal = openAhsModal;
+window.closeSearchAhsModal = closeSearchAhsModal;
+window.searchAhs = searchAhs;
+window.selectAhs = selectAhs;
+window.updateKoefisien = updateKoefisien;
+window.saveTotalAfterTaxProfit = saveTotalAfterTaxProfit;
+window.addBahanUpah = addBahanUpah;
+window.closeSearchMaterialModal = closeSearchMaterialModal;
+window.searchMaterial = searchMaterial;
+window.selectMaterial = selectMaterial;
+window.deleteMaterial = deleteMaterial;
+window.editKoefisien = editKoefisien;
+window.deleteAllPricing = deleteAllPricing;
+window.exportToExcel = exportToExcel;
+window.openImportModal = openImportModal;
+window.closeImportModal = closeImportModal;
+window.startImport = startImport;
+window.logout = logout;
+window.goBack = goBack;
