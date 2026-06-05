@@ -37,7 +37,7 @@ function parseNum(value) {
  * Sesuai dengan aplikasi RAB asli.
  */
 function getStepForCategory(category) {
-  return 'any'; // Bebas menginput angka desimal berapapun tanpa dibatasi step khusus, panah akan menambah/mengurangi 1
+  return '0.0001'; // Kembalikan panah spinner dengan presisi 4 desimal
 }
 
 async function api(url, options = {}) {
