@@ -41,7 +41,7 @@ function getStepForCategory(category) {
 }
 
 async function api(url, options = {}) {
-  url = (window.API_BASE || '') + url;
+  url = 'https://rab-sid.up.railway.app' + url;
   const headers = { 'Content-Type': 'application/json' };
   const res = await fetch(url, { headers, ...options });
   if (res.status === 401) { window.location.href = '/login'; return null; }

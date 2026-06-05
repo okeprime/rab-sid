@@ -2,7 +2,7 @@
 // Dashboard utama — mengganti ipcRenderer dengan fetch() API
 
 async function api(url, options = {}) {
-  url = (window.API_BASE || '') + url;
+  url = 'https://rab-sid.up.railway.app' + url;
   const res = await fetch(url, {
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },

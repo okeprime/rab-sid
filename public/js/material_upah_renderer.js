@@ -6,7 +6,7 @@ let sortOrder = { kode:'asc', name:'asc', unit:'asc', price:'asc', category:'asc
 
 // ── Helper API ─────────────────────────────────────────────────────────────────
 async function api(url, options = {}) {
-  url = (window.API_BASE || '') + url;
+  url = 'https://rab-sid.up.railway.app' + url;
   const res = await fetch(url, {
     credentials: 'include', headers: {'Content-Type':'application/json'}, ...options });
   if (res.status === 401) { window.location.href = '/login'; return null; }

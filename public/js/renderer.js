@@ -3,7 +3,7 @@
 
 // ── Helper ─────────────────────────────────────────────────────────────────────
 async function apiPost(url, data) {
-  url = (window.API_BASE || '') + url;
+  url = 'https://rab-sid.up.railway.app' + url;
   const res = await fetch(url, {
     credentials: 'include',
     method: 'POST',
