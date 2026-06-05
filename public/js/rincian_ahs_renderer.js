@@ -37,10 +37,7 @@ function parseNum(value) {
  * Sesuai dengan aplikasi RAB asli.
  */
 function getStepForCategory(category) {
-  const cat = (category || '').toLowerCase();
-  if (cat.includes('upah') || cat.includes('tenaga')) return '0.001';
-  if (cat.includes('alat') || cat.includes('equipment')) return '0.0001';
-  return '0.0001'; // Bahan dan default
+  return '0.0001'; // Mendukung hingga 4 desimal untuk semua kategori
 }
 
 async function api(url, options = {}) {
