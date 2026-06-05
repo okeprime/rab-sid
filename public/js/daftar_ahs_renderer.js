@@ -69,25 +69,43 @@ function initSearchAHS() {
 
 // Modal functions
 function addNewAhs() {
-  ['newKelompok','newKodeAHS','newAHS','newSatuan'].forEach(id => {
+  ['newKelompok','newKodeAhs','newAhs','newSatuan'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
   });
-  const modal = document.getElementById('addAHSModal');
+  const modal = document.getElementById('addAhsModal');
   if (modal) { modal.style.display = 'block'; document.getElementById('newKelompok')?.focus(); }
 }
-function closeAddAHSModal() { const m = document.getElementById('addAHSModal'); if (m) m.style.display = 'none'; }
-function closeEditAHSModal() { const m = document.getElementById('editAHSModal'); if (m) m.style.display = 'none'; }
+function closeAhsModal() { const m = document.getElementById('addAhsModal'); if (m) m.style.display = 'none'; }
+function closeEditAhsModal() { const m = document.getElementById('editAhsModal'); if (m) m.style.display = 'none'; }
+
+function toggleManualInput(type) {
+  const select = document.getElementById(`${type}Kelompok`);
+  const manualInput = document.getElementById(`${type}ManualInput`);
+  if (select && manualInput) {
+    if (select.value === 'manual') {
+      manualInput.style.display = 'block';
+      document.getElementById(`${type}KelompokManual`)?.focus();
+    } else {
+      manualInput.style.display = 'none';
+      const manualEl = document.getElementById(`${type}KelompokManual`);
+      if (manualEl) manualEl.value = '';
+    }
+  }
+}
 
 async function saveAhs() {
-  const kelompok = document.getElementById('newKelompok').value.trim();
-  const kode_ahs = document.getElementById('newKodeAHS').value.trim();
-  const ahs = document.getElementById('newAHS').value.trim();
+  let kelompok = document.getElementById('newKelompok').value;
+  if (kelompok === 'manual') kelompok = document.getElementById('newKelompokManual').value;
+  kelompok = kelompok.trim();
+
+  const kode_ahs = document.getElementById('newKodeAhs').value.trim();
+  const ahs = document.getElementById('newAhs').value.trim();
   const satuan = document.getElementById('newSatuan').value.trim();
   if (!kelompok || !kode_ahs || !ahs || !satuan) { alert('Semua field wajib diisi!'); return; }
 
   const result = await api('/api/ahs', { method:'POST', body: JSON.stringify({ kelompok, kode_ahs, ahs, satuan }) });
   if (result?.error) { alert('Error: ' + result.error); return; }
-  closeAddAHSModal();
+  closeAhsModal();
   loadAHS();
   loadAHSSuggestions();
 }
@@ -98,22 +116,25 @@ async function editAHS(id) {
   const data = await api(`/api/ahs/${id}`);
   if (!data) return;
   document.getElementById('editKelompok').value = data.kelompok;
-  document.getElementById('editKodeAHS').value = data.kode_ahs;
-  document.getElementById('editAHS').value = data.ahs;
+  document.getElementById('editKodeAhs').value = data.kode_ahs;
+  document.getElementById('editAhs').value = data.ahs;
   document.getElementById('editSatuan').value = data.satuan;
-  document.getElementById('editAHSModal').style.display = 'block';
+  document.getElementById('editAhsModal').style.display = 'block';
 }
 
-async function updateAHS() {
-  const kelompok = document.getElementById('editKelompok').value.trim();
-  const kode_ahs = document.getElementById('editKodeAHS').value.trim();
-  const ahs = document.getElementById('editAHS').value.trim();
+async function updateAhs() {
+  let kelompok = document.getElementById('editKelompok').value;
+  if (kelompok === 'manual') kelompok = document.getElementById('editKelompokManual').value;
+  kelompok = kelompok.trim();
+
+  const kode_ahs = document.getElementById('editKodeAhs').value.trim();
+  const ahs = document.getElementById('editAhs').value.trim();
   const satuan = document.getElementById('editSatuan').value.trim();
   if (!kelompok || !kode_ahs || !ahs || !satuan) { alert('Semua field wajib diisi!'); return; }
 
   const result = await api(`/api/ahs/${currentAHSId}`, { method:'PUT', body: JSON.stringify({ kelompok, kode_ahs, ahs, satuan }) });
   if (result?.error) { alert('Error: ' + result.error); return; }
-  closeEditAHSModal();
+  closeEditAhsModal();
   loadAHS();
 }
 
@@ -157,10 +178,10 @@ function goBack() {
 }
 
 window.onclick = function(event) {
-  const addModal = document.getElementById('addAHSModal');
-  const editModal = document.getElementById('editAHSModal');
-  if (event.target === addModal) closeAddAHSModal();
-  if (event.target === editModal) closeEditAHSModal();
+  const addModal = document.getElementById('addAhsModal');
+  const editModal = document.getElementById('editAhsModal');
+  if (event.target === addModal) closeAhsModal();
+  if (event.target === editModal) closeEditAhsModal();
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -171,14 +192,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // === GLOBAL SCOPE EXPORTS ===
 window.addNewAhs = addNewAhs;
-window.closeAddAHSModal = closeAddAHSModal;
-window.closeEditAHSModal = closeEditAHSModal;
+window.closeAhsModal = closeAhsModal;
+window.closeEditAhsModal = closeEditAhsModal;
 window.saveAhs = saveAhs;
 window.editAHS = editAHS;
-window.updateAHS = updateAHS;
+window.updateAhs = updateAhs;
 window.deleteAHS = deleteAHS;
 window.deleteAllAhs = deleteAllAhs;
 window.exportData = exportData;
 window.importData = importData;
 window.logout = logout;
 window.goBack = goBack;
+window.toggleManualInput = toggleManualInput;
