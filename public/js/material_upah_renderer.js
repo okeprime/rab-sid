@@ -9,7 +9,7 @@ async function api(url, options = {}) {
   url = 'https://rab-sid.up.railway.app' + url;
   const res = await fetch(url, {
     credentials: 'include', headers: {'Content-Type':'application/json'}, ...options });
-  if (res.status === 401) { window.location.href = '/login'; return null; }
+  if (res.status === 401) { return null; }
   return res.json();
 }
 
@@ -168,7 +168,7 @@ async function deleteAllMaterials() {
 
 // ── Export / Import ────────────────────────────────────────────────────────────
 function exportData() {
-  window.open(`${window.API_BASE}/api/export/materials`, '_blank');
+  window.open(`https://rab-sid.up.railway.app/api/export/materials`, '_blank');
 }
 
 function importData() {
@@ -180,7 +180,7 @@ function importData() {
     if (!file) return;
     const formData = new FormData();
     formData.append('file', file);
-    const res = await fetch(`${window.API_BASE}/api/export/import-materials`, { method: 'POST', body: formData });
+    const res = await fetch(`https://rab-sid.up.railway.app/api/export/import-materials`, { method: 'POST', body: formData });
     const result = await res.json();
     alert(result.message || (result.error ? 'Error: ' + result.error : 'Import selesai'));
     loadMaterials();
@@ -190,7 +190,7 @@ function importData() {
 
 // ── Logout ─────────────────────────────────────────────────────────────────────
 function logout() {
-  fetch(`${window.API_BASE}/api/auth/logout`, { method: 'POST' }).finally(() => { window.location.href = '/login'; });
+  fetch(`https://rab-sid.up.railway.app/api/auth/logout`, { method: 'POST' }).finally(() => { // window.location.href = '/login'; });
 }
 
 function goBack() {

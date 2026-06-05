@@ -7,7 +7,7 @@ async function api(url, options = {}) {
   url = 'https://rab-sid.up.railway.app' + url;
   const res = await fetch(url, {
     credentials: 'include', headers: {'Content-Type':'application/json'}, ...options });
-  if (res.status === 401) { window.location.href = '/login'; return null; }
+  if (res.status === 401) { return null; }
   return res.json();
 }
 
@@ -153,7 +153,7 @@ async function deleteAllAhs() {
   loadAHS();
 }
 
-function exportData() { window.open(`${window.API_BASE}/api/export/ahs`, '_blank'); }
+function exportData() { window.open(`https://rab-sid.up.railway.app/api/export/ahs`, '_blank'); }
 
 function importData() {
   const input = document.createElement('input');
@@ -161,7 +161,7 @@ function importData() {
   input.onchange = async (e) => {
     const file = e.target.files[0]; if (!file) return;
     const formData = new FormData(); formData.append('file', file);
-    const res = await fetch(`${window.API_BASE}/api/export/import-ahs`, { method:'POST', body: formData });
+    const res = await fetch(`https://rab-sid.up.railway.app/api/export/import-ahs`, { method:'POST', body: formData });
     const result = await res.json();
     alert(result.message || (result.error ? 'Error: ' + result.error : 'Import selesai'));
     loadAHS();
@@ -170,7 +170,7 @@ function importData() {
 }
 
 function logout() {
-  fetch(`${window.API_BASE}/api/auth/logout`, { method: 'POST' }).finally(() => { window.location.href = '/login'; });
+  fetch(`https://rab-sid.up.railway.app/api/auth/logout`, { method: 'POST' }).finally(() => { // window.location.href = '/login'; });
 }
 
 function goBack() {

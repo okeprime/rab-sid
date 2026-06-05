@@ -9,7 +9,7 @@ async function api(url, options = {}) {
     ...options,
   });
   if (res.status === 401) {
-    window.location.href = '/login';
+    // window.location.href = '/login';
     return null;
   }
   return res.json();
@@ -92,11 +92,11 @@ async function loadProjectInfo() {
 
 async function exportMyData() {
   // Download materials Excel
-  window.open(`${window.API_BASE}/api/export/materials`, '_blank');
+  window.open(`https://rab-sid.up.railway.app/api/export/materials`, '_blank');
 }
 
 function logout() {
-  fetch(`${window.API_BASE}/api/auth/logout`, { method: 'POST' })
-    .then(() => { window.location.href = '/login'; })
-    .catch(() => { window.location.href = '/login'; });
+  fetch(`https://rab-sid.up.railway.app/api/auth/logout`, { method: 'POST' })
+    .then(() => { // window.location.href = '/login'; })
+    .catch(() => { // window.location.href = '/login'; });
 }

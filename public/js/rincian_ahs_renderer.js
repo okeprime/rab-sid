@@ -44,7 +44,7 @@ async function api(url, options = {}) {
   url = 'https://rab-sid.up.railway.app' + url;
   const headers = { 'Content-Type': 'application/json' };
   const res = await fetch(url, { headers, ...options });
-  if (res.status === 401) { window.location.href = '/login'; return null; }
+  if (res.status === 401) { return null; }
   return res.json();
 }
 
@@ -127,8 +127,7 @@ function calculateTotals() {
 
     if (bar) {
       bar.style.width = pct + '%';
-      const pctEl = bar.parentElement?.querySelector('.percentage');
-      if (pctEl) pctEl.textContent = pct + '%';
+      bar.textContent = pct + '%';
     }
     if (valEl) valEl.textContent = formatRupiah(val);
   });
@@ -533,7 +532,7 @@ async function deleteAllPricing() {
 // ─────────────────────────────────────────────────────────────────────────────
 function exportToExcel() {
   if (!selectedAhsId) { alert('Pilih AHS terlebih dahulu'); return; }
-  window.open(`/api/export/ahs-rincian?ahs_id=${selectedAhsId}`, '_blank');
+  window.open(`https://rab-sid.up.railway.app/api/export/ahs-rincian?ahs_id=${selectedAhsId}`, '_blank');
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -570,7 +569,7 @@ async function startImport() {
 
     const formData = new FormData();
     formData.append('file', file);
-    const res = await fetch(`${window.API_BASE}/api/export/import-ahs`, { method: 'POST', body: formData });
+    const res = await fetch(`https://rab-sid.up.railway.app/api/export/import-ahs`, { method: 'POST', body: formData });
     const result = await res.json();
 
     if (progressBar) progressBar.style.width = '100%';
@@ -589,7 +588,7 @@ async function startImport() {
 // MISC
 // ─────────────────────────────────────────────────────────────────────────────
 function logout() {
-  fetch(`${window.API_BASE}/api/auth/logout`, { method: 'POST' }).finally(() => { window.location.href = '/login'; });
+  fetch(`https://rab-sid.up.railway.app/api/auth/logout`, { method: 'POST' }).finally(() => { // window.location.href = '/login'; });
 }
 function goBack() { window.location.href = 'index.html'; }
 
