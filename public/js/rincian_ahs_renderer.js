@@ -37,7 +37,7 @@ function parseNum(value) {
  * Sesuai dengan aplikasi RAB asli.
  */
 function getStepForCategory(category) {
-  return '0.0001'; // Mendukung hingga 4 desimal untuk semua kategori
+  return 'any'; // Bebas menginput angka desimal berapapun tanpa dibatasi step khusus, panah akan menambah/mengurangi 1
 }
 
 async function api(url, options = {}) {
@@ -267,7 +267,8 @@ function displayPricingData(pricingData) {
 
   pricingData.forEach((item) => {
     const price = parseNum(item.price || 0);
-    const koefisien = parseNum(item.koefisien || 0);
+    const koefisienRaw = parseNum(item.koefisien || 0);
+    const koefisien = Number(koefisienRaw.toFixed(4)); // Prevent 1.00001 or 0.99999 precision bugs
     const total = price * koefisien;
     const stepValue = getStepForCategory(item.category);
 
@@ -316,6 +317,9 @@ function displayPricingData(pricingData) {
 async function updateKoefisien(inputEl) {
   const row = inputEl.closest('tr');
   if (!row) return;
+
+  let val = parseNum(inputEl.value);
+  val = Number(val.toFixed(4)); // Prevent precision bugs on save
   const pricingId = row.dataset.pricingId;
   if (!pricingId) return; // Row baru yang belum tersimpan ke DB, skip
 
